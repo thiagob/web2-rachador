@@ -7,6 +7,9 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
+// instancia rota de eventos
+var eventosRouter = require('./routes/eventos');
+
 var app = express();
 
 // view engine setup
@@ -21,6 +24,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// declara caminho/uri da rota de eventos
+app.use('/eventos', eventosRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
