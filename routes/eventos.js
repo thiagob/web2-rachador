@@ -6,4 +6,9 @@ router.get('/', function(req, res, next) {
   res.render('eventos/index');
 });
 
+/* GET home page. */
+router.get('/novo', function(req, res, next) {
+  res.render('eventos/novo');
+});
+
 module.exports = router;
