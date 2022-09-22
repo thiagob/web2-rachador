@@ -10,6 +10,10 @@ var usersRouter = require('./routes/users');
 // instancia rota de eventos
 var eventosRouter = require('./routes/eventos');
 
+// instacia classe de conexão com o banco de dados
+var DBConn = require('./db-conn.js');
+
+
 var app = express();
 
 // view engine setup
@@ -21,6 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+var db = new DBConn();
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
