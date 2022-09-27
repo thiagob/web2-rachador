@@ -7,12 +7,10 @@ var db = new DBConn();
 
 /* GET home de eventos. */
 router.get('/', function (req, res, next) {
-
   db.findAllEventos((err, data) => {
     if (err) next(err)
     else res.render('eventos/index', { eventos: data });
   });
-
 });
 
 /* GET Novo evento */
@@ -22,8 +20,8 @@ router.get('/novo', function (req, res, next) {
 
 
 router.post('/', function (req, res, next) {
-
   var errors = [];
+
   if (req.body.nome == "") {
     errors.push("Nome não informado.");
   }
@@ -43,8 +41,8 @@ router.post('/', function (req, res, next) {
 });
 
 router.post('/:id', function (req, res, next) {
-
   var errors = [];
+  
   if (req.body.nome == "") {
     errors.push("Nome não informado.");
   }
@@ -62,7 +60,6 @@ router.post('/:id', function (req, res, next) {
 });
 
 router.post('/deletar/:id', function (req, res, next) {
-
   db.deleteEvento(req.params.id, (err, data) => {
     if (err) next(err)
     else {
@@ -74,7 +71,6 @@ router.post('/deletar/:id', function (req, res, next) {
 
 /* GET home de eventos. */
 router.get('/:id', function (req, res, next) {
-
   db.getEventoById(req.params.id, (err, data) => {
     if (err) next(err)
     else if (!data) res.status(404).send('Evento não encontrado.');
@@ -84,7 +80,6 @@ router.get('/:id', function (req, res, next) {
 });
 
 router.get('/editar/:id', function (req, res, next) {
-
   db.getEventoById(req.params.id, (err, data) => {
     if (err) next(err)
     else if (!data) res.status(404).send('Evento não encontrado.');
