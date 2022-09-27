@@ -6,6 +6,14 @@ class DBConn {
         this.db = new sqlite3.Database('db/dev.db');
     }
 
+    createTables() {
+        var sql = `CREATE TABLE IF NOT EXISTS eventos (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            nome TEXT NOT NULL)`;
+
+        return this.db.run(sql);
+    }
+    
     findAllEventos(callback) {
 
         var sql = "SELECT * FROM eventos";

@@ -12,7 +12,8 @@ var eventosRouter = require('./routes/eventos');
 
 // instacia classe de conexão com o banco de dados
 var DBConn = require('./db-conn.js');
-
+var db = new DBConn();
+db.createTables();
 
 var app = express();
 
@@ -25,8 +26,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-var db = new DBConn();
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
