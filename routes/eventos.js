@@ -36,13 +36,13 @@ router.post('/', function (req, res, next) {
       }
     });
   } else {
-    res.render('eventos/form', { "errors": errors });
+    res.render('eventos/novo', { "errors": errors });
   }
 });
 
 router.post('/:id', function (req, res, next) {
   var errors = [];
-  
+
   if (req.body.nome == "") {
     errors.push("Nome não informado.");
   }
@@ -55,6 +55,9 @@ router.post('/:id', function (req, res, next) {
       }
     });
   } else {
+    var evento = {};
+    evento.nome = req.body.nome;
+    
     res.render('eventos/editar', { "evento": evento, "errors": errors });
   }
 });
