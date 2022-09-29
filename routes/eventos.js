@@ -20,6 +20,29 @@ router.get('/novo', function(req, res, next) {
   res.render('eventos/novo');
 });
 
+router.post('/', function(req, res, next) {
+
+  var errors = [];
+
+  if (req.body.nome == "") {
+    errors.push("Nome não informado");
+  } else if (req.body.nome.length < 3) {
+    errors.push("Nome deve conter pelo menos 3 caracteres.");
+  }
+
+  if (errors.length == 0) {
+    db.createEvento(req.body.nome, (err, data) => {
+      if (err) {
+        next(err);
+      } else {
+        res.send('Novo evento criado:' + req.body.nome);
+      }
+    });  
+  } else {
+    res.render('eventos/novo', { "errors": errors });
+  }  
+});
+
 /* GET home page. */
 router.get('/:id', function(req, res, next) {
   //res.send(req.params);

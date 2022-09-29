@@ -28,6 +28,13 @@ class DBConn {
 
     }    
 
+    createEvento(nome, callback) {
+
+        var sql = "INSERT INTO eventos (nome) VALUES (?)";
+        return this.db.run(sql, [nome], callback);
+
+    }
+
 }
 
 module.exports = DBConn

@@ -6,7 +6,22 @@
   </head>
   <body>
     <h1>Novo Evento</h1>
-    <form action="/eventos/novo" method="get">
+    <p>
+      <a href="/eventos">Voltar</a>
+    </p>  
+
+    <% if (typeof(errors) !="undefined" ) { %>
+      <div style="color: red; border: 1px solid red;">
+        <ul>
+          <% for(var i=0; i < errors.length; i++) { %>
+            <li>
+              <%= errors[i] %>
+            </li>
+            <% } %>
+        </ul>
+      </div>
+    <% } %>
+    <form action="/eventos/" method="POST">
       <label for="nome">Nome do evento:</label><br>
       <input type="text" id="nome" name="nome"><br>
 
