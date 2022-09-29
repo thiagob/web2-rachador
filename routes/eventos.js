@@ -35,7 +35,8 @@ router.post('/', function(req, res, next) {
       if (err) {
         next(err);
       } else {
-        res.send('Novo evento criado:' + req.body.nome);
+        //res.send('Novo evento criado:' + req.body.nome);
+        res.redirect('/eventos');
       }
     });  
   } else {
