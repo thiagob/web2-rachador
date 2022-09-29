@@ -21,6 +21,13 @@ class DBConn {
 
     }
 
+    getEventoById(id, callback) {
+
+        var sql = "SELECT * FROM eventos WHERE id = (?)";
+        return this.db.get(sql, [id], callback);
+
+    }    
+
 }
 
 module.exports = DBConn
