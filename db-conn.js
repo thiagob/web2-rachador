@@ -11,7 +11,17 @@ class DBConn {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             nome TEXT NOT NULL)`;
 
-        return this.db.run(sql);
+        this.db.run(sql);
+
+        var sql = `CREATE TABLE participantes (
+            id           INTEGER PRIMARY KEY AUTOINCREMENT,
+            nomeCompleto STRING  NOT NULL,
+            apelido      TEXT    UNIQUE NOT NULL,
+            email        STRING  UNIQUE NOT NULL,
+            chavePIX     STRING
+        );`;
+
+        this.db.run(sql);        
     }
 
     getLastInsertRowId(callback) {

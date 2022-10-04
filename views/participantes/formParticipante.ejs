@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Participantes</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+</head>
+
+<body>
+    <% if (typeof(row.erros) !="undefined" && row.erros.length > 0) { %>
+        <div class="erro">
+          <ul>
+            <% for(var i=0; i < row.erros.length; i++) { %>
+              <li>
+                <%= row.erros[i] %>
+              </li>
+              <% } %>
+          </ul>
+        </div>
+    <% } %>    
+
+    <h1>Participante</h1>
+
+    <p><a href="/participantes/">Voltar</a></p>
+
+    <% if (modo == "edit") { %>
+        <form action="/participantes/atualizar/<%= row.id %>" method="POST">
+    <% } else { %>
+        <form action="/participantes/criar" method="POST">
+    <% } %>
+
+    <input type="hidden" id="id" name="id" value="<%= row.id %>" />
+
+    <div class="campo">
+        <label>Nome Completo</label>
+        <input type="text" id="nomeCompleto" name="nomeCompleto" value="<%= row.nomeCompleto %>" />
+    </div>
+
+    <div class="campo">
+        <label>Apelido</label>
+        <input type="text" id="apelido" name="apelido" value="<%= row.apelido %>" />
+    </div>
+
+    <div class="campo">
+        <label>E-mail</label>
+        <input type="text" id="email" name="email" value="<%= row.email %>" />
+    </div>    
+
+    <div class="campo">
+        <label>Chave PIX</label>
+        <input type="text" id="chavePIX" name="chavePIX" value="<%= row.chavePIX %>" />
+    </div> 
+
+    <input type="submit" value="Salvar" />
+    
+    </form>
+</body>
+
+</html>

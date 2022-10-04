@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Participantes</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>Participantes</h1>
+    <p><a href="/participantes/novo">Novo</a></p>
+    <table>
+      <tr>
+        <th>Nome</th>
+        <th>Apelido</th>
+        <th>Ações</th>
+      </tr>      
+      <% for(var i = 0; i < rows.length; i++) { %>
+        <tr>
+          <td><%= rows[i].nomeCompleto %></td>
+          <td><%= rows[i].apelido %></td>
+          <td>
+            <a href="/participantes/exibir/<%= rows[i].id %>">Exibir</a> | 
+            <a href="/participantes/editar/<%= rows[i].id %>">Editar</a>
+          </td>
+        </tr>
+      <% } %> 
+      </table>      
+    </body>
+</html>

@@ -6,3 +6,18 @@ body {
 a {
   color: #00B7FF;
 }
+
+div.campo label {
+  font-weight: bold;
+  display: block;
+}
+
+div.campo {
+  margin-bottom: 1em;
+}
+
+div.erro {
+  color: red;
+  border: 1px solid red;
+  background-color: bisque;
+}
