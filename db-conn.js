@@ -13,7 +13,7 @@ class DBConn {
 
         this.db.run(sql);
 
-        var sql = `CREATE TABLE participantes (
+        var sql = `CREATE TABLE IF NOT EXISTS participantes (
             id           INTEGER PRIMARY KEY AUTOINCREMENT,
             nomeCompleto STRING  NOT NULL,
             apelido      TEXT    UNIQUE NOT NULL,
