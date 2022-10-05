@@ -70,6 +70,14 @@ class Participante {
         var params = [this.nomeCompleto, this.apelido, this.email, this.chavePIX];
         return dbConn.db.run(sql, params, callback);
     }    
+
+
+    excluir(callback) {
+        var sql = `DELETE FROM participantes
+        WHERE ID = (?)`;
+
+        return dbConn.db.run(sql, this.id, callback);
+    }      
 }
 
 module.exports = Participante

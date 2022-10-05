@@ -72,4 +72,22 @@ router.post('/criar', function (req, res, next) {
 
 });
 
+router.post('/excluir/:id', function (req, res, next) {
+
+    Participante.buscarPeloId(req.params.id, (err, row) => {
+        if (err) next(err)
+        else {
+            var p = new Participante();
+            p.carregar(row);            
+            p.excluir((err, data) => {
+                if (err) next(err)
+                else {
+                    res.redirect('/participantes');
+                }
+            });        
+        }
+    });
+
+});
+
 module.exports = router;
