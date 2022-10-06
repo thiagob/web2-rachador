@@ -60,4 +60,16 @@ router.get('/:id', function(req, res, next) {
   });
 });
 
+/* Rota para exclusão de um evento */
+router.post('/deletar/:id', function(req, res, next) {
+  db.deleteEvento(req.params.id, (err, data) => {
+    if (err) {
+      next(err);
+    } else {
+      //res.send('Novo evento criado:' + req.body.nome);
+      res.redirect('/eventos');
+    }
+  });  
+});
+
 module.exports = router;

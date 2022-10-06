@@ -35,6 +35,13 @@ class DBConn {
 
     }
 
+    deleteEvento(id, callback) {
+
+        var sql = "DELETE FROM eventos WHERE ID = (?)";
+        return this.db.run(sql, [id], callback);
+
+    }    
+
 }
 
 module.exports = DBConn

@@ -12,5 +12,10 @@
     <p>
       <strong>Nome: </strong><%= evento.nome %>
     </p>
+    <p>
+      <form action="/eventos/deletar/<%= evento.id %>" method="POST">
+        <input type="submit" value="Excluir" />
+      </form>
+    </p>
   </body>
 </html>
