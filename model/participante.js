@@ -46,6 +46,33 @@ class Participante {
         return dbConn.db.get('SELECT * FROM participantes WHERE id = (?)', id, callback);
     }
 
+    static buscarParticipantesDoEvento(idEvento, callback) {
+        return dbConn.db.all(`
+            SELECT
+                participante_evento.*,
+                participantes.nomeCompleto,
+                participantes.apelido,
+                participantes.email,
+                participantes.chavePIX
+            FROM 
+                participante_evento,
+                participantes
+            WHERE participante_evento.idParticipante = participantes.id
+                AND participante_evento.idEvento = (?)
+        `, idEvento, callback);
+    }
+
+    static buscarDemaisParticipantes(idEvento, callback) {
+        return dbConn.db.all(`
+            SELECT
+                *
+            FROM
+                participantes
+            WHERE id not in (SELECT idParticipante FROM participante_evento WHERE idEvento = (?))
+        `, idEvento, callback);
+    }    
+
+
     salvar(callback) {
         if (this.id > 0) {
             this.atualizar(callback);
