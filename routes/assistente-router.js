@@ -14,7 +14,7 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.get('/evento/:idEvento', function (req, res, next) {
+router.get('/evento/:idEvento/participantes', function (req, res, next) {
 
     // Busca detalhes do evento
     Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
