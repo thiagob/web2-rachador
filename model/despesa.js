@@ -35,8 +35,19 @@ class Despesa {
         return dbConn.db.get('SELECT * FROM despesas WHERE id = (?)', id, callback);
     }
 
-    static buscarPeloIdEvento(idEvento, callback) {
-        return dbConn.db.all('SELECT * FROM despesas WHERE idEvento = (?)', idEvento, callback);
+    static buscarDespesasDoEvento(idEvento, callback) {
+        return dbConn.db.all(`
+            SELECT
+                despesas.*,
+                participantes.nomeCompleto,
+                participantes.email,
+                participantes.chavePIX
+            FROM
+                despesas,
+                participantes
+            WHERE despesas.idEvento = (?)
+            AND despesas.idParticipante = participantes.id        
+        `, idEvento, callback);
     }
 
     salvar(callback) {
