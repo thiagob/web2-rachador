@@ -1,27 +1,18 @@
+
+
 var sqlite3 = require('sqlite3');
 
 class DBConn {
 
     constructor() {
-        this.db = new sqlite3.Database('db/dev.db');
+        this.db = new sqlite3.Database('db/dev2.db');
     }
 
     createTables() {
-        var sql = `CREATE TABLE IF NOT EXISTS eventos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            nome TEXT NOT NULL)`;
 
-        this.db.run(sql);
-
-        var sql = `CREATE TABLE IF NOT EXISTS participantes (
-            id           INTEGER PRIMARY KEY AUTOINCREMENT,
-            nomeCompleto STRING  NOT NULL,
-            apelido      TEXT    UNIQUE NOT NULL,
-            email        STRING  UNIQUE NOT NULL,
-            chavePIX     STRING
-        );`;
-
-        this.db.run(sql);        
+        console.log('***************************')
+        console.log('PLEASE RUN MANUALLY THE schema.sql FILE USING THE SQLITESTUDIO')
+        console.log('***************************')
     }
 
     getLastInsertRowId(callback) {
