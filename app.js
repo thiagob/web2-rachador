@@ -10,6 +10,7 @@ var usersRouter = require('./routes/users');
 // instancia rota de eventos
 var eventosRouter = require('./routes/eventos');
 var participantesRouter = require('./routes/participantes-router');
+var assistenteRouter = require('./routes/assistente-router');
 
 // instacia classe de conexão com o banco de dados
 var DBConn = require('./db-conn.js');
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/participantes', participantesRouter);
+app.use('/assistente', assistenteRouter);
 
 // declara caminho/uri da rota de eventos
 app.use('/eventos', eventosRouter);
