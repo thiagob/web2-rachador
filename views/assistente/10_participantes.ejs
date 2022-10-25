@@ -9,6 +9,7 @@
 
 <body>
     <h1>Evento: <%= evento.nome %></h1>
+    <h2>Participantes</h2>
     <p>
         <label>Selecione um Participante:</label>
         <select name="idParticipante" id="idParticipante">
@@ -36,6 +37,8 @@
         </table>
     </p>
     <p>
+        <a href="/assistente/">Início</a>
+        <a href="/assistente/">Anterior</a>
         <a href="/assistente/evento/<%= evento.id %>/despesas">Próximo</a>
     </p>
 </body>
