@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Assistente de Evento</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script type="text/javascript">
+    function adicionar() {
+
+        var url = '/assistente/evento/' + document.getElementById('idEvento').value + '/despesas';
+        document.location.href = url;
+
+    }
+  </script>
+</head>
+
+<body>
+    <h1>Evento: <%= evento.nome %></h1>
+    <p>
+        <label>Selecione um Participante:</label>
+        <select name="idParticipante" id="idParticipante">
+            <option value="0"></option>
+            <% for(var i=0; i < demaisParticipantes.length; i++) { %>
+                <option value="<%= demaisParticipantes[i].id %>"><%= demaisParticipantes[i].nomeCompleto %></option>
+            <% } %>
+        </select>
+        <a href="#" onclick="adicionar();">Adicionar</a>
+    </p>
+    <p>
+        <table border="1">
+            <tr>
+                <th>Nome Completo</th>
+                <th>e-mail</th>
+                <th>Ação</th>
+            </tr>
+            <% for(var i=0; i < participantesDoEvento.length; i++) { %>
+                <tr>
+                    <td><%= participantesDoEvento[i].nomeCompleto %></td>
+                    <td><%= participantesDoEvento[i].email %></td>
+                    <td><a href="#" onclick="remover(<%= participantesDoEvento[i].idParticipante %>);">Remover</a></td>
+                </tr>
+            <% } %>
+        </table>
+    </p>
+    <p>
+        <a href="#" onclick="adicionar();">Próximo</a>
+    </p>
+</body>
+
+</html>
