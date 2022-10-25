@@ -11,7 +11,10 @@
 
 <body>
     <h1>Evento: <%= evento.nome %></h1>
-    <h2>Resumo</h2>    
+    <h2>Resumo</h2>
+    <p>
+      Custo total do evento: <%= evento.totalPago %>
+    </p>
     <p>
         <a href="/assistente/">Início</a>
         <a href="/assistente/evento/<%= evento.id %>/despesas">Anterior</a>

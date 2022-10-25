@@ -68,14 +68,20 @@ router.get('/evento/:idEvento/despesas', function (req, res, next) {
 router.get('/evento/:idEvento/resumo', function (req, res, next) {
 
     // Busca detalhes do evento
-    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
-        if (err) next(err)
-        else {
-            res.render('assistente/30_resumo', {
-                evento: evento
-            });
-        }
+    Evento.buscarPeloId(req.params.idEvento, (err, data) => {
 
+        var evento = new Evento();
+        evento.carregar(data);
+        evento.calcularTotais((err, data) => {
+
+            if (err) next(err)
+            else {
+                res.render('assistente/30_resumo', {
+                    evento: evento
+                });
+            }    
+            
+        });
     });
 
 });

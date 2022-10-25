@@ -1,16 +1,26 @@
 var DBConn = require('../db-conn.js');
 var dbConn = new DBConn();
 
+var Participante = require('../model/participante')
+var Despesa = require('../model/despesa')
+
+
 class Evento {
 
     constructor() {
         this.nome = '';
         this.erros = [];
+        this.totalPago = 0,
+        this.totalRecebido = 0,
+        this.totalEmAberto = 0
     }
 
     carregar(json){        
         this.id = json.id;
         this.nome = json.nome;
+        //this.totalPago = json.totalPago;
+        //this.totalRecebido = json.totalRecebido;
+        //this.totalEmAberto = json.totalEmAberto;       
     }
 
     validar() {
@@ -40,12 +50,23 @@ class Evento {
 
     atualizar(callback) {
         var sql = `UPDATE eventos 
-            SET nome = (?) 
+            SET nome = (?)
             WHERE ID = (?)`;
 
-        var params = [this.nome];
+        var params = [this.nome, this.id];
         return dbConn.db.run(sql, params, callback);
     }
+
+    atualizarTotais(callback) {
+        var sql = `UPDATE eventos 
+            SET totalPago = (?),
+                totalRecebido = (?),
+                totalEmAberto = (?)
+            WHERE ID = (?)`;
+
+        var params = [this.totalPago, this.totalRecebido, this.totalEmAberto, this.id];
+        return dbConn.db.run(sql, params, callback);
+    }    
 
     criar(callback) {
         var sql = `INSERT INTO eventos (nome)
@@ -62,6 +83,12 @@ class Evento {
 
         return dbConn.db.run(sql, this.id, callback);
     }      
+
+
+    calcularTotais(callback) {
+        this.totalPago = Math.random();
+        this.atualizarTotais(callback);
+    }
 }
 
 module.exports = Evento
