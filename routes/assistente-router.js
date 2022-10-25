@@ -7,7 +7,19 @@ router.get('/', function (req, res, next) {
 
     Evento.buscarTodos((err, rows) => {
         if (err) next(err)
-        else res.render('assistente/index', { eventos: rows });
+        else res.render('assistente/00_index', { eventos: rows });
+    });
+
+});
+
+
+router.get('/evento/:idEvento', function (req, res, next) {
+
+    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
+        if (err) next(err)
+        else {
+            res.render('assistente/index', { eventos: rows });
+        }              
     });
 
 });
