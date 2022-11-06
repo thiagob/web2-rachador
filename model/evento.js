@@ -8,6 +8,7 @@ var Despesa = require('../model/despesa')
 class Evento {
 
     constructor() {
+        this.data = {};
         this.nome = '';
         this.erros = [];
         this.totalPago = 0,
@@ -16,6 +17,7 @@ class Evento {
     }
 
     carregar(json){        
+        this.data = json;
         this.id = json.id;
         this.nome = json.nome;
         //this.totalPago = json.totalPago;
@@ -37,7 +39,16 @@ class Evento {
     }
 
     static buscarPeloId(id, callback) {
-        return dbConn.db.get('SELECT * FROM eventos WHERE id = (?)', id, callback);
+        return dbConn.db.get('SELECT * FROM eventos WHERE id = (?)', id, (err, data) => {
+            if (err) {
+                callback(err);
+            } else {
+                var evento = new Evento();
+                evento.carregar(data);
+                callback(err, evento);        
+            }
+
+        });
     }
 
     salvar(callback) {
@@ -85,10 +96,47 @@ class Evento {
     }      
 
 
+    buscarParticipantes(callback) {
+        Participante.buscarParticipantesDoEvento(this.id, (err, data) => {
+            if (err) {
+                callback(err);
+            } else {
+                this.participantes = data;
+                callback(err, data);
+            }            
+        });
+    }
+
+    adicionarParticipante(idParticipante, callback) {
+        Participante.adicionarParticipanteNoEvento(this.id, idParticipante, callback);
+    }
+
+    removerParticipante(idParticipante, callback) {
+        Participante.removerParticipanteDoEvento(this.id, idParticipante, callback);
+    }
+
+    buscarDespesas() {
+
+    }
+
+    adicionarDespesa(json, callback) {
+        var despesa = new Despesa();
+        despesa.carregar(json);
+        despesa.idEvento = this.id;
+
+        despesa.salvar(callback);
+    }
+
+    excluirDespesa(idDespesa, callback) {
+        Despesa.excluir(idDespesa, callback);
+    }
+
     calcularTotais(callback) {
         this.totalPago = Math.random();
-        this.atualizarTotais(callback);
+        //this.atualizarTotais(callback);
     }
+
+
 }
 
 module.exports = Evento

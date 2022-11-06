@@ -62,6 +62,21 @@ class Participante {
         `, idEvento, callback);
     }
 
+    static adicionarParticipanteNoEvento(idEvento, idParticipante, callback) {
+        var sql = `INSERT INTO participante_evento
+            (idEvento, idParticipante)
+            VALUES ((?), (?))`;
+
+        return dbConn.db.run(sql, [idEvento, idParticipante], callback);   
+    }
+
+    static removerParticipanteDoEvento(idEvento, idParticipante, callback) {
+        var sql = `DELETE FROM participante_evento
+        WHERE idEvento = (?) AND idParticipante = (?)`;
+
+        return dbConn.db.run(sql, [idEvento, idParticipante], callback);                
+    }    
+
     static buscarDemaisParticipantes(idEvento, callback) {
         return dbConn.db.all(`
             SELECT

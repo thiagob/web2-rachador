@@ -11,6 +11,10 @@ class Despesa {
 
     carregar(json){        
         this.id = json.id;
+        this.data = json;
+
+        this.idEvento = json.idEvento;
+        this.idParticipante = json.idParticipante;
         this.descricao = json.descricao;
         this.valor = json.valor;
     }
@@ -50,6 +54,12 @@ class Despesa {
         `, idEvento, callback);
     }
 
+    static excluir(idDespesa, callback) {
+        var sql = `DELETE FROM despesas WHERE ID = (?)`;
+        return dbConn.db.run(sql, idDespesa, callback);
+    }      
+
+
     salvar(callback) {
         if (this.id > 0) {
             this.atualizar(callback);
@@ -71,17 +81,10 @@ class Despesa {
         var sql = `INSERT INTO despesas (idEvento, idParticipante, descricao, valor)
         VALUES ((?), (?), (?), (?))`;
 
-        var params = [this.nome];
+        var params = [this.idEvento, this.idParticipante, this.descricao, this.valor];
         return dbConn.db.run(sql, params, callback);
     }    
 
-
-    excluir(callback) {
-        var sql = `DELETE FROM despesas
-        WHERE ID = (?)`;
-
-        return dbConn.db.run(sql, this.id, callback);
-    }      
 }
 
 module.exports = Despesa

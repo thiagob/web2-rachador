@@ -5,6 +5,10 @@ var Evento = require('../model/evento')
 var Participante = require('../model/participante')
 var Despesa = require('../model/despesa')
 
+
+// -----------------------------------------------------------------------------------------------------------------
+// Página Inicial do Assistente
+// -----------------------------------------------------------------------------------------------------------------
 router.get('/', function (req, res, next) {
 
     Evento.buscarTodos((err, rows) => {
@@ -14,7 +18,9 @@ router.get('/', function (req, res, next) {
 
 });
 
-
+// -----------------------------------------------------------------------------------------------------------------
+// Página 1 do assistente: Relação de Participantes
+// -----------------------------------------------------------------------------------------------------------------
 router.get('/evento/:idEvento/participantes', function (req, res, next) {
 
     // Busca detalhes do evento
@@ -43,7 +49,47 @@ router.get('/evento/:idEvento/participantes', function (req, res, next) {
     });
 });
 
+// Adiciona participante do evento
+router.post('/evento/:idEvento/participantes/:idParticipante', function (req, res, next) {
 
+    // Busca detalhes do evento
+    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
+       
+        if (err) next(err)
+        else {
+            evento.adicionarParticipante(req.params.idParticipante, (err, data) => {
+                if (err) next(err)
+                else {
+                    res.status(200).send('Participante adicionado do evento.');
+                }        
+            });
+        }
+    });
+
+});
+
+// Remove participante do evento
+router.delete('/evento/:idEvento/participantes/:idParticipante', function (req, res, next) {
+
+    // Busca detalhes do evento
+    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
+       
+        if (err) next(err)
+        else {
+            evento.removerParticipante(req.params.idParticipante, (err, data) => {
+                if (err) next(err)
+                else {
+                    res.status(200).send('Participante excluído do evento.');
+                }        
+            });
+        }
+    });
+
+});
+
+// -----------------------------------------------------------------------------------------------------------------
+// Página 2: Relação de despesas
+// -----------------------------------------------------------------------------------------------------------------
 router.get('/evento/:idEvento/despesas', function (req, res, next) {
 
     // Busca detalhes do evento
@@ -51,13 +97,13 @@ router.get('/evento/:idEvento/despesas', function (req, res, next) {
         if (err) next(err)
         else {
 
-            Despesa.buscarDespesasDoEvento(evento.id, (err, despesasDoEvento) => {
+            Despesa.buscarDespesasDoEvento(evento.id, (err, despesas) => {
 
                 if (err) next(err)
                 else {
                     res.render('assistente/20_despesas', {
                         evento: evento,
-                        despesasDoEvento: despesasDoEvento
+                        despesas: despesas
                     });
                 }
             });
@@ -65,25 +111,84 @@ router.get('/evento/:idEvento/despesas', function (req, res, next) {
     });
 });
 
-router.get('/evento/:idEvento/resumo', function (req, res, next) {
+// Página para adicionar despesa
+router.get('/evento/:idEvento/despesas/nova', function (req, res, next) {
+
+    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
+        if (err) next(err)
+        else {
+
+            evento.buscarParticipantes((err, participantes) => {
+                if (err) next(err)
+                else {
+                    res.render('assistente/21_nova_despesa', {
+                        evento: evento,
+                        participantes: participantes
+                    });                    
+                }
+            });
+        }
+    });
+});
+
+// Adiciona despesa no evento
+router.post('/evento/:idEvento/despesas', function (req, res, next) {
 
     // Busca detalhes do evento
-    Evento.buscarPeloId(req.params.idEvento, (err, data) => {
+    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
+        if (err) next(err)
+        else {
+            evento.adicionarDespesa(req.body, (err, data) => {
+                if (err) next(err)
+                else {
+                    res.redirect('/assistente/evento/' + req.params.idEvento + '/despesas');
+                }
+            });
+        }
+    });
+});
 
-        var evento = new Evento();
-        evento.carregar(data);
-        evento.calcularTotais((err, data) => {
+// Exclui despesa
+router.delete('/evento/:idEvento/despesas/:idDespesa', function (req, res, next) {
 
-            if (err) next(err)
-            else {
-                res.render('assistente/30_resumo', {
-                    evento: evento
-                });
-            }    
-            
-        });
+    // Busca detalhes do evento
+    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
+       
+        if (err) next(err)
+        else {
+            evento.excluirDespesa(req.params.idDespesa, (err, data) => {
+                if (err) next(err)
+                else {
+                    res.status(200).send('Despesa excluída do evento.');
+                }        
+            });
+        }
     });
 
 });
+
+
+// -----------------------------------------------------------------------------------------------------------------
+// Página 3: Relação de pagamentos
+// -----------------------------------------------------------------------------------------------------------------
+
+router.get('/evento/:idEvento/resumo', function (req, res, next) {
+
+    // Busca detalhes do evento
+    Evento.buscarPeloId(req.params.idEvento, (err, evento) => {
+
+        if (err) next(err)
+        else {            
+            res.render('assistente/30_resumo', {
+                evento: evento
+            });
+        }
+    });
+});
+
+router.post('/evento/:idEvento/gerarPagamentos', function (req, res, next) {
+    res.send('OK');
+});
+
 
 module.exports = router;
