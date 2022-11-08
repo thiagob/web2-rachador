@@ -2,27 +2,29 @@ var DBConn = require('../db-conn.js');
 var dbConn = new DBConn();
 
 var Participante = require('../model/participante')
-var Despesa = require('../model/despesa')
+var Despesa = require('../model/despesa');
+const Pagamento = require('./pagamentos.js');
 
 
 class Evento {
 
     constructor() {
         this.data = {};
+
+        this.despesas = {};
+        this.participantes = {};
+        this.pagamentos = {};
+
         this.nome = '';
         this.erros = [];
-        this.totalPago = 0,
-        this.totalRecebido = 0,
-        this.totalEmAberto = 0
+        this.total = 0;
     }
 
-    carregar(json){        
+    carregar(json) {
         this.data = json;
         this.id = json.id;
         this.nome = json.nome;
-        //this.totalPago = json.totalPago;
-        //this.totalRecebido = json.totalRecebido;
-        //this.totalEmAberto = json.totalEmAberto;       
+        this.total = json.total;
     }
 
     validar() {
@@ -32,7 +34,7 @@ class Evento {
         else if (this.nome.length < 3) this.erros.push('Nome com menos de 3 caracteres');
 
         return this.erros.length == 0;
-    }    
+    }
 
     static buscarTodos(callback) {
         return dbConn.db.all('SELECT * FROM eventos', callback);
@@ -45,7 +47,23 @@ class Evento {
             } else {
                 var evento = new Evento();
                 evento.carregar(data);
-                callback(err, evento);        
+
+                evento.buscarParticipantes((err, data) => {
+                    if (err) callback(err);
+                    else {
+                        evento.buscarDespesas((err, data) => {
+                            if (err) callback(err);
+                            else {
+                                evento.buscarPagamentos((err, data) => {
+                                    if (err) callback(err);
+                                    else {
+                                        callback(err, evento);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             }
 
         });
@@ -68,24 +86,13 @@ class Evento {
         return dbConn.db.run(sql, params, callback);
     }
 
-    atualizarTotais(callback) {
-        var sql = `UPDATE eventos 
-            SET totalPago = (?),
-                totalRecebido = (?),
-                totalEmAberto = (?)
-            WHERE ID = (?)`;
-
-        var params = [this.totalPago, this.totalRecebido, this.totalEmAberto, this.id];
-        return dbConn.db.run(sql, params, callback);
-    }    
-
     criar(callback) {
         var sql = `INSERT INTO eventos (nome)
         VALUES ((?))`;
 
         var params = [this.nome];
         return dbConn.db.run(sql, params, callback);
-    }    
+    }
 
 
     excluir(callback) {
@@ -93,7 +100,11 @@ class Evento {
         WHERE ID = (?)`;
 
         return dbConn.db.run(sql, this.id, callback);
-    }      
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Participantes
+    // -----------------------------------------------------------------------------------------------------------------
 
 
     buscarParticipantes(callback) {
@@ -103,7 +114,7 @@ class Evento {
             } else {
                 this.participantes = data;
                 callback(err, data);
-            }            
+            }
         });
     }
 
@@ -115,8 +126,19 @@ class Evento {
         Participante.removerParticipanteDoEvento(this.id, idParticipante, callback);
     }
 
-    buscarDespesas() {
+    // -----------------------------------------------------------------------------------------------------------------
+    // Despesa
+    // -----------------------------------------------------------------------------------------------------------------
 
+    buscarDespesas(callback) {
+        Despesa.buscarDespesasDoEvento(this.id, (err, data) => {
+            if (err) {
+                callback(err);
+            } else {
+                this.despesas = data;
+                callback(err, data);
+            }
+        });
     }
 
     adicionarDespesa(json, callback) {
@@ -131,11 +153,88 @@ class Evento {
         Despesa.excluir(idDespesa, callback);
     }
 
-    calcularTotais(callback) {
-        this.totalPago = Math.random();
-        //this.atualizarTotais(callback);
+    // -----------------------------------------------------------------------------------------------------------------
+    // Pagamentos
+    // -----------------------------------------------------------------------------------------------------------------
+
+    buscarPagamentos(callback) {
+        Pagamento.buscarPagamentosDoEvento(this.id, (err, data) => {
+            if (err) {
+                callback(err);
+            } else {
+                this.pagamentos = data;
+                callback(err, data);
+            }
+        });
     }
 
+    calcular() {
+        this.calcularTotais();
+        this.atualizarTotais();
+    }
+
+    // -------------------------------------
+
+    calcularTotais(callback) {
+
+
+        var divisao = this.total / this.participantes.length;
+        this.total = this.calcularTotalEvento();
+
+        this.participantes.forEach(p => {
+            p.totalPagar = divisao;
+
+            var pago = this.calcularTotalParticipante(p.idParticipante);
+            
+            if (pago > 0) {
+                if (pago > divisao) {
+                    p.totalReceber = pago - divisao;
+                    p.totalPagar = 0;
+                } else {
+                    p.totalReceber = 0;
+                    p.totalPagar = divisao - pago;
+                }    
+            }
+
+        });
+    }
+
+    calcularTotalEvento() {
+
+        var total = 0;
+        this.despesas.forEach(d => {
+            total += d.valor;
+        });
+        return total;
+    }
+
+    calcularTotalParticipante(idParticipante) {
+
+        var total = 0;
+        this.despesas.forEach(d => {
+            if (d.idParticipante == idParticipante) {
+                total += d.valor;
+            }
+        });
+        return total;
+    }
+
+
+    // -------------------------------------
+
+    atualizarTotais() {
+
+        this.atualizarTotalEvento();
+        this.participantes.forEach(p => {
+            Participante.atualizarTotais(p.idEvento, p.idParticipante, p.totalPagar, p.totalReceber);
+        });
+    }
+
+    atualizarTotalEvento(callback) {
+        var sql = 'UPDATE eventos SET total = (?) WHERE ID = (?)';
+        var params = [this.total, this.id];
+        dbConn.db.run(sql, params, callback);
+    }
 
 }
 

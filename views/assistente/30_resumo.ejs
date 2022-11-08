@@ -10,16 +10,102 @@
 </head>
 
 <body>
-    <h1>Evento: <%= evento.nome %></h1>
-    <h2>Resumo</h2>
-    <p>
-      Custo total do evento: <%= evento.totalPago %>
-    </p>
-    <p>
-        <a href="/assistente/">Início</a>
-        <a href="/assistente/evento/<%= evento.id %>/despesas">Anterior</a>
-        <a href="/assistente/evento/<%= evento.id %>/resumo">Próximo</a>
-    </p>    
+  <h1>Evento: <%= evento.nome %>
+  </h1>
+  <h2>Resumo</h2>
+  <form action="/assistente/evento/<%= evento.id %>/gerarPagamentos" method="POST">
+    <input type="submit" value="Calcular Pagamentos" />
+  </form>
+
+  </form>
+  <p>
+    Custo total do evento: <%= evento.total %>
+  </p>
+  <h3>
+    Participantes
+  </h3>
+  <p>
+  <table border="1">
+    <tr>
+      <th>Participante</th>
+      <th>À Pagar</th>
+      <th>À Receber</th>
+    </tr>
+    <% for(var i=0; i < participantes.length; i++) { %>
+      <tr>
+        <td>
+          <%= participantes[i].nomeCompleto %>
+        </td>
+        <td>
+          <%= participantes[i].totalPagar %>
+        </td>
+        <td>
+          <%= participantes[i].totalReceber %>
+        </td>
+      </tr>
+      <% } %>
+  </table>
+  </p>
+  <h3>
+    Despesas
+  </h3>
+
+  <p>
+  <table border="1">
+    <tr>
+      <th>Participante</th>
+      <th>Descrição</th>
+      <th>Valor</th>
+    </tr>
+    <% for(var i=0; i < despesas.length; i++) { %>
+      <tr>
+        <td>
+          <%= despesas[i].nomeCompleto %>
+        </td>
+        <td>
+          <%= despesas[i].descricao %>
+        </td>
+        <td>
+          <%= despesas[i].valor %>
+        </td>
+      </tr>
+      <% } %>
+  </table>
+  </p>
+  <h3>
+    Pagamentos
+  </h3>  
+  <p>
+  <table border="1">
+    <tr>
+      <th>Pagador</th>
+      <th>Recebedor</th>
+      <th>Valor</th>
+      <th>Situação</th>
+    </tr>
+    <% for(var i=0; i < pagamentos.length; i++) { %>
+      <tr>
+        <td>
+          <%= pagamentos[i].nomePagador %>
+        </td>
+        <td>
+          <%= pagamentos[i].nomeRecebedor %>
+        </td>
+        <td>
+          <%= pagamentos[i].valor %>
+        </td>
+        <td>
+          <%= pagamentos[i].status %>
+        </td>
+      </tr>
+      <% } %>
+  </table>
+  </p>
+  <p>
+    <a href="/assistente/">Início</a>
+    <a href="/assistente/evento/<%= evento.id %>/despesas">Anterior</a>
+    <a href="/assistente/evento/<%= evento.id %>/resumo">Próximo</a>
+  </p>
 </body>
 
 </html>

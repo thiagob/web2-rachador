@@ -11,7 +11,7 @@ class Participante {
         this.erros = [];
     }
 
-    carregar(json){        
+    carregar(json) {
         this.id = json.id;
         this.nomeCompleto = json.nomeCompleto;
         this.apelido = json.apelido;
@@ -36,7 +36,7 @@ class Participante {
         }
 
         return this.erros.length == 0;
-    }    
+    }
 
     static buscarTodos(callback) {
         return dbConn.db.all('SELECT * FROM participantes', callback);
@@ -53,7 +53,9 @@ class Participante {
                 participantes.nomeCompleto,
                 participantes.apelido,
                 participantes.email,
-                participantes.chavePIX
+                participantes.chavePIX,
+                participante_evento.totalPagar,
+                participante_evento.totalReceber
             FROM 
                 participante_evento,
                 participantes
@@ -67,15 +69,15 @@ class Participante {
             (idEvento, idParticipante)
             VALUES ((?), (?))`;
 
-        return dbConn.db.run(sql, [idEvento, idParticipante], callback);   
+        return dbConn.db.run(sql, [idEvento, idParticipante], callback);
     }
 
     static removerParticipanteDoEvento(idEvento, idParticipante, callback) {
         var sql = `DELETE FROM participante_evento
         WHERE idEvento = (?) AND idParticipante = (?)`;
 
-        return dbConn.db.run(sql, [idEvento, idParticipante], callback);                
-    }    
+        return dbConn.db.run(sql, [idEvento, idParticipante], callback);
+    }
 
     static buscarDemaisParticipantes(idEvento, callback) {
         return dbConn.db.all(`
@@ -85,8 +87,7 @@ class Participante {
                 participantes
             WHERE id not in (SELECT idParticipante FROM participante_evento WHERE idEvento = (?))
         `, idEvento, callback);
-    }    
-
+    }
 
     salvar(callback) {
         if (this.id > 0) {
@@ -98,11 +99,23 @@ class Participante {
 
     atualizar(callback) {
         var sql = `UPDATE participantes 
-            SET nomeCompleto = (?), apelido = (?), email = (?), chavePIX = (?) 
+            SET nomeCompleto = (?), apelido = (?), email = (?), chavePIX = (?)
             WHERE ID = (?)`;
 
         var params = [this.nomeCompleto, this.apelido, this.email, this.chavePIX, this.id];
         return dbConn.db.run(sql, params, callback);
+    }
+
+    static atualizarTotais(idEvento, idParticipante, totalPagar, totalReceber, callback) {
+        var sql = `UPDATE participante_evento
+            SET totalPagar = (?), 
+                totalReceber = (?)
+            WHERE idEvento = (?)
+            AND idParticipante = (?)`;
+
+        var params = [totalPagar, totalReceber, idEvento, idParticipante];
+
+        dbConn.db.run(sql, params, callback);
     }
 
     criar(callback) {
@@ -111,15 +124,14 @@ class Participante {
 
         var params = [this.nomeCompleto, this.apelido, this.email, this.chavePIX];
         return dbConn.db.run(sql, params, callback);
-    }    
-
+    }
 
     excluir(callback) {
         var sql = `DELETE FROM participantes
         WHERE ID = (?)`;
 
         return dbConn.db.run(sql, this.id, callback);
-    }      
+    }
 }
 
 module.exports = Participante

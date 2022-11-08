@@ -36,20 +36,31 @@ class Pagamento {
         return dbConn.db.get('SELECT * FROM pagamento WHERE id = (?)', id, callback);
     }
 
-    static buscarDespesasDoEvento(idEvento, callback) {
+    static buscarPagamentosDoEvento(idEvento, callback) {
         return dbConn.db.all(`
             SELECT
-                pagamentos.*
+                pagamentos.*,
+                recebedor.nomeCompleto as nomeRecebedor,
+                pagador.nomeCompleto  as nomePagador
             FROM
-                pagamentos
-            WHERE despesas.idEvento = (?)
+                pagamentos,
+                participantes recebedor,
+                participantes pagador
+            WHERE pagamentos.idEvento = (?)
+            AND pagamentos.idParticipanteRecebedor = recebedor.id
+            AND pagamentos.idParticipantePagador = pagador.id
         `, idEvento, callback);
     }
 
-    static excluir(idDespesa, callback) {
+    static excluir(idPagamento, callback) {
         var sql = `DELETE FROM pagamentos WHERE ID = (?)`;
-        return dbConn.db.run(sql, idDespesa, callback);
-    }      
+        return dbConn.db.run(sql, idPagamento, callback);
+    }
+
+    static excluirPagamentosDoEvento(idEvento, callback) {
+        var sql = `DELETE FROM pagamentos WHERE idEvento = (?)`;
+        return dbConn.db.run(sql, idEvento, callback);
+    }
 
 
     salvar(callback) {
