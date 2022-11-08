@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Assistente de Evento</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+<body>
+    <h1>Evento: <%= evento.nome %></h1>
+    <h2>Nova despesas</h2>
+    <form action="/assistente/evento/<%= evento.id %>/despesas/" method="POST">
+        <div class="campo">
+            <label>Selecione um Participante:</label>
+            <select name="idParticipante" id="idParticipante">
+                <% for(var i=0; i < participantes.length; i++) { %>
+                    <option value="<%= participantes[i].idParticipante %>"><%= participantes[i].nomeCompleto %></option>
+                <% } %>
+            </select>
+        </div>        
+
+        <div class="campo">
+            <label>Descrição</label>
+            <input type="text" id="descricao" name="descricao" %>" />
+        </div>        
+
+        <div class="campo">
+            <label>Valor</label>
+            <input type="number" id="valor" name="valor" step="0.01" %>" />
+        </div>                
+
+        <input type="submit" value="Adicionar" />
+    
+    </form>    
+
+    <p>
+        <a href="/assistente/evento/<%= evento.id %>/despesas">Voltar</a>
+    </p>    
+</body>
+
+</html>
