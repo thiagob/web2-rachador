@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Participantes</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script type="text/javascript">
+    function excluirParticipante(id) {
+
+      var resposta = confirm("Deseja remover esse registro?")
+      if (resposta == true) {
+        $.post('/participantes/excluir/' + id,   // url
+          { }, // data to be submit
+          function(data, status, jqXHR) {// success callback
+            document.location.reload(true);
+          }
+        );
+
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <h1>Participantes</h1>
+  <p><a href="/participantes/novo">Novo</a></p>
+  <table>
+    <tr>
+      <th>Nome</th>
+      <th>Apelido</th>
+      <th>Ações</th>
+    </tr>
+    <% for(var i=0; i < rows.length; i++) { %>
+      <tr>
+        <td>
+          <%= rows[i].nomeCompleto %>
+        </td>
+        <td>
+          <%= rows[i].apelido %>
+        </td>
+        <td>
+          <a href="/participantes/exibir/<%= rows[i].id %>">Exibir</a> |
+          <a href="/participantes/editar/<%= rows[i].id %>">Editar</a> |
+          <a href="#" onclick="excluirParticipante(<%= rows[i].id %>);">Excluir</a>
+        </td>
+      </tr>
+      <% } %>
+  </table>
+</body>
+
+</html>

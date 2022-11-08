@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Assistente de Evento</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="/javascript/assistente.js" type="application/javascript"></script>
+</head>
+
+<body>
+    <h1>Evento: <%= evento.nome %></h1>
+    <h2>Despesas</h2>
+    <p>
+        <a href="/assistente/evento/<%= evento.id %>/despesas/nova">Nova despesa</a>
+    </p>
+    
+    <p>
+        <table border="1">
+            <tr>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Participante</th>
+                <th>Ação</th>
+            </tr>
+            <% for(var i=0; i < despesas.length; i++) { %>
+                <tr>
+                    <td><%= despesas[i].descricao %></td>
+                    <td><%= despesas[i].valor %></td>
+                    <td><%= despesas[i].nomeCompleto %></td>
+                    <td><a href="#" onclick="removerDespesaEvento(<%= evento.id %>, <%= despesas[i].id %>);">Remover</a></td>
+                </tr>
+            <% } %>
+        </table>
+    </p>
+    <p>
+        <a href="/assistente/">Início</a>
+        <a href="/assistente/evento/<%= evento.id %>/despesas">Anterior</a>
+        <a href="/assistente/evento/<%= evento.id %>/resumo">Próximo</a>
+    </p>
+</body>
+
+</html>

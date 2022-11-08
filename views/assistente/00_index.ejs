@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Assistente de Evento</title>
+  <link rel='stylesheet' href='/stylesheets/style.css' />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="/javascript/assistente.js"></script>
+  <script type="text/javascript">
+    function proximo() {
+
+        var url = '/assistente/evento/' + document.getElementById('idEvento').value + '/participantes';
+        document.location.href = url;
+
+    }
+  </script>
+</head>
+
+<body>
+    <h1>Assistente</h1>
+    <p>
+        <label>Selecione um evento:</label>
+        <select name="idEvento" id="idEvento">
+            <% for(var i=0; i < eventos.length; i++) { %>
+                <option value="<%= eventos[i].id %>"><%= eventos[i].nome %></option>
+            <% } %>
+        </select>
+    </p>        
+    <p>
+        <a href="#" onclick="proximo();">Próximo</a>
+    </p>
+</body>
+
+</html>
