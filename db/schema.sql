@@ -1,14 +1,12 @@
-CREATE TABLE IF NOT EXISTS eventos (
-    id            INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome          TEXT    NOT NULL,
-    totalPago     DECIMAL NOT NULL
-                          DEFAULT (0),
-    totalRecebido DECIMAL NOT NULL
-                          DEFAULT (0),
-    totalEmAberto DECIMAL NOT NULL
-                          DEFAULT (0) 
+CREATE TABLE eventos (
+    id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome  TEXT    NOT NULL,
+    total DECIMAL NOT NULL
+                  DEFAULT (0) 
 );
-CREATE TABLE IF NOT EXISTS participantes (
+
+
+CREATE TABLE participantes (
     id           INTEGER PRIMARY KEY AUTOINCREMENT,
     nomeCompleto STRING  NOT NULL,
     apelido      TEXT    UNIQUE
@@ -17,7 +15,9 @@ CREATE TABLE IF NOT EXISTS participantes (
                          NOT NULL,
     chavePIX     STRING
 );
-CREATE TABLE IF NOT EXISTS participante_evento (
+
+
+CREATE TABLE participante_evento (
     idEvento       INTEGER REFERENCES eventos (id) ON DELETE NO ACTION
                                                    ON UPDATE NO ACTION
                                                    MATCH SIMPLE
@@ -26,18 +26,17 @@ CREATE TABLE IF NOT EXISTS participante_evento (
                                                          ON UPDATE NO ACTION
                                                          MATCH SIMPLE
                            NOT NULL,
-    totalPago      DECIMAL NOT NULL
+    totalPagar     DECIMAL NOT NULL
                            DEFAULT (0),
-    totalRecebido  DECIMAL NOT NULL
-                           DEFAULT (0),
-    totalEmAberto  DECIMAL NOT NULL
+    totalReceber   DECIMAL NOT NULL
                            DEFAULT (0),
     CONSTRAINT PK_Participante_Evento PRIMARY KEY (
         idEvento,
         idParticipante
     )
 );
-CREATE TABLE IF NOT EXISTS despesas (
+
+CREATE TABLE despesas (
     id             INTEGER PRIMARY KEY AUTOINCREMENT,
     idEvento       INTEGER REFERENCES eventos (id) 
                            NOT NULL,
@@ -52,14 +51,16 @@ CREATE TABLE IF NOT EXISTS despesas (
     REFERENCES participante_evento (idEvento,
     idParticipante) 
 );
-CREATE TABLE IF NOT EXISTS pagamentos (
+
+
+CREATE TABLE pagamentos (
     id                      INTEGER PRIMARY KEY AUTOINCREMENT
                                     NOT NULL,
     idEvento                INTEGER REFERENCES eventos (id) 
                                     NOT NULL,
-    idParticipanteRecebedor INTEGER REFERENCES participantes (id) 
-                                    NOT NULL,
     idParticipantePagador   INTEGER REFERENCES participantes (id) 
+                                    NOT NULL,
+    idParticipanteRecebedor INTEGER REFERENCES participantes (id) 
                                     NOT NULL,
     valor                   DECIMAL NOT NULL,
     status                  STRING  NOT NULL
