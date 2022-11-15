@@ -6,6 +6,7 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var exemplosRouter = require('./routes/exemplos');
 
 // instancia rota de eventos
 var eventosRouter = require('./routes/eventos');
@@ -33,6 +34,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/participantes', participantesRouter);
 app.use('/assistente', assistenteRouter);
+app.use('/exemplos', exemplosRouter);
 
 // declara caminho/uri da rota de eventos
 app.use('/eventos', eventosRouter);
