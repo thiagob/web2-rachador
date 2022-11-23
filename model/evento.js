@@ -119,12 +119,10 @@ class Evento {
     }
 
     adicionarParticipante(idParticipante, callback) {
-        // TODO
         Participante.adicionarParticipanteNoEvento(this.id, idParticipante, callback);
     }
 
     removerParticipante(idParticipante, callback) {
-        // TODO
         Participante.removerParticipanteDoEvento(this.id, idParticipante, callback);
     }
 
@@ -144,11 +142,15 @@ class Evento {
     }
 
     adicionarDespesa(json, callback) {
-        // TODO
+        var despesa = new Despesa();
+        despesa.carregar(json);
+        despesa.idEvento = this.id;
+
+        despesa.salvar(callback);
     }
 
     excluirDespesa(idDespesa, callback) {
-        // TODO
+        Despesa.excluir(idDespesa, callback);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -175,15 +177,27 @@ class Evento {
 
     calcularTotais(callback) {
         // TODO
+
+/*      [  ] Somar todas as despesas para calcular o custo total do evento
+        [  ] Verificar o número total de participantes
+        [  ] Calcular o custo por participante
+             [  ] Calcular quanto cada participante já pagou
+             [  ] Identificar se o participante deverá receber ou pagar
+             [  ] Calcular quanto o participante ainda tem que pagar
+             [  ] Calcular se o participante tem algo a receber */
+        
+
     }
 
     calcularTotalEvento() {
 
         // TODO
+        // Soma os custos totais do evento
     }
 
     calcularTotalParticipante(idParticipante) {
         // TODO
+        // Retorna a soma o total das despesas pagas por um participante
     }
 
 
