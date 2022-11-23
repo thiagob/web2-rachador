@@ -120,10 +120,12 @@ class Evento {
 
     adicionarParticipante(idParticipante, callback) {
         // TODO
+        Participante.adicionarParticipanteNoEvento(this.id, idParticipante, callback);
     }
 
     removerParticipante(idParticipante, callback) {
         // TODO
+        Participante.removerParticipanteDoEvento(this.id, idParticipante, callback);
     }
 
     // -----------------------------------------------------------------------------------------------------------------
