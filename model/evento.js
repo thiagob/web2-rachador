@@ -178,26 +178,68 @@ class Evento {
     calcularTotais(callback) {
         // TODO
 
-/*      [  ] Somar todas as despesas para calcular o custo total do evento
-        [  ] Verificar o número total de participantes
-        [  ] Calcular o custo por participante
-             [  ] Calcular quanto cada participante já pagou
-             [  ] Identificar se o participante deverá receber ou pagar
-             [  ] Calcular quanto o participante ainda tem que pagar
-             [  ] Calcular se o participante tem algo a receber */
+        // [X] Somar todas as despesas para calcular o custo total do evento
+        this.total = this.calcularTotalEvento();
+        // [X] Verificar o número total de participantes
+        var qtdeParticipantes = this.participantes.length;
+        // [X] Calcular o custo por participante
+        var custoPorParticipante = this.total / qtdeParticipantes;
+
+        this.participantes.forEach(part => {
+            // [X] Calcular quanto cada participante já pagou
+            var pagoPeloParticipante = this.calcularTotalParticipante(part.idParticipante);
+            part.totalPagar = pagoPeloParticipante;
+
+            // [X] Identificar se o participante deverá receber ou pagar
+            // [X] Calcular quanto o participante ainda tem que pagar
+            // [X] Calcular se o participante tem algo a receber        if (pagoPeloParticipante > 0) {
+                if (pagoPeloParticipante > custoPorParticipante) {
+                    // pagou mais despesas do que o custo por participante, 
+                    // então deve receber algum valor
+                    part.totalPagar = 0;
+                    part.totalReceber = pagoPeloParticipante - custoPorParticipante;
+                } else {
+                    // pagou menos despesas do que o custo por participante, 
+                    // então deve pagar a diferença
+                    part.totalPagar = custoPorParticipante - pagoPeloParticipante;
+                    part.totalReceber = 0;
+                }
+
+            } else {
+                // não pagou nenhuma despesa, então paga o custo por participante
+                part.totalPagar = custoPorParticipante;
+                part.totalReceber = 0;
+            }
+
+        });
+
+    
+    
         
 
     }
 
     calcularTotalEvento() {
-
         // TODO
         // Soma os custos totais do evento
+
+        var total = 0;
+        this.despesas.forEach(desp => {
+            total += desp.valor;
+        });
+        return total;
     }
 
     calcularTotalParticipante(idParticipante) {
         // TODO
         // Retorna a soma o total das despesas pagas por um participante
+        var total = 0;
+        this.despesas.forEach(desp => {
+            if (desp.idParticipante == idParticipante) {
+                total += desp.valor;
+            }            
+        });
+        return total;        
     }
 
 
