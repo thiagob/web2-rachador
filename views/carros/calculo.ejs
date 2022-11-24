@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Eventos</title>
+</head>
+
+<body>
+    <% for(var i = 0; i < carros.length; i++) { %>
+        <p>
+          <%= carros[i].Placa %> | <%= carros[i].Marca %></a> 
+        </p>
+      <% } %>  
+
+      <form method="POST" action="/exemplos/carros/calcula">
+        <input type="submit" value="Submeter" />
+      </form>      
+</body>
+
+</html>

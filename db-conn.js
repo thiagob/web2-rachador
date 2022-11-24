@@ -24,6 +24,17 @@ class DBConn {
         return this.db.all(sql, [], callback);
     }
 
+    buscaTodosCarros(callback) {
+        var sql = 'SELECT * FROM carros';
+        return this.db.all(sql, [], callback);
+    }
+
+    buscaAlunosDoCurso(callback) {
+        var sql = 'SELECT * FROM maitrcula WHERE idCurso = X';
+        return this.db.all(sql, [], callback);
+    }
+
+
     createEvento(nome, callback) {
         var sql = 'INSERT INTO eventos (nome) VALUES (?)';
         return this.db.run(sql, [nome], callback);
